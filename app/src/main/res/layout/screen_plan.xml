@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/planScreen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingTop="18dp"
+    android:paddingEnd="20dp"
+    android:visibility="gone">
+
+    <TextView
+        style="@style/Text.Talkshow.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wochenplan"
+        android:textColor="@color/accent" />
+
+    <TextView
+        style="@style/Text.Talkshow.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Sendeplan" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/dayChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:chipSpacingHorizontal="6dp"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPlanMon"
+                style="@style/Widget.Talkshow.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mo" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPlanTue"
+                style="@style/Widget.Talkshow.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Di" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPlanWed"
+                style="@style/Widget.Talkshow.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mi" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPlanThu"
+                style="@style/Widget.Talkshow.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Do" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPlanFri"
+                style="@style/Widget.Talkshow.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fr" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPlanSat"
+                style="@style/Widget.Talkshow.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sa" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPlanSun"
+                style="@style/Widget.Talkshow.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="So" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/tvPlanDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/text_muted"
+        android:textSize="13sp"
+        android:text="Freitag" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/planList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="20dp"
+        android:overScrollMode="never" />
+
+    <include
+        android:id="@+id/planEmpty"
+        layout="@layout/view_empty_plan"
+        android:visibility="gone" />
+
+</LinearLayout>

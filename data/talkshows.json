@@ -1,0 +1,380 @@
+{
+  "updated": "2026-10-23T18:00:00+02:00",
+  "source": "Talkshow Gäste – redaktionelle Beispieldaten",
+  "shows": [
+    {
+      "id": "markus-lanz",
+      "name": "Markus Lanz",
+      "broadcaster": "ZDF",
+      "weekdays": [2, 3, 4],
+      "time": "23:15",
+      "frequency": "3× pro Woche",
+      "color": "#E7B45B",
+      "description": "Der späte ZDF-Talk mit Markus Lanz: Politik, Gesellschaft und die Themen des Tages im ausführlichen Gespräch."
+    },
+    {
+      "id": "maybrit-illner",
+      "name": "Maybrit Illner",
+      "broadcaster": "ZDF",
+      "weekdays": [4],
+      "time": "22:15",
+      "frequency": "Wöchentlich",
+      "color": "#6EA8FE",
+      "description": "Maybrit Illner diskutiert donnerstags mit Politikerinnen, Politikern und Journalisten über die großen Streitfragen."
+    },
+    {
+      "id": "caren-miosga",
+      "name": "Caren Miosga",
+      "broadcaster": "ARD",
+      "weekdays": [7],
+      "time": "21:45",
+      "frequency": "Wöchentlich",
+      "color": "#6FCF97",
+      "description": "Der politische Sonntagstalk im Ersten – analytisch, hartnäckig und mit Gästen aus Politik und Gesellschaft."
+    },
+    {
+      "id": "maischberger",
+      "name": "Maischberger",
+      "broadcaster": "ARD",
+      "weekdays": [2, 3],
+      "time": "22:50",
+      "frequency": "2× pro Woche",
+      "color": "#E45C5C",
+      "description": "Sandra Maischberger fragt nach: aktuelle Debatten, klare Positionen und kontroverse Gäste am Dienstag und Mittwoch."
+    },
+    {
+      "id": "koelner-treff",
+      "name": "Kölner Treff",
+      "broadcaster": "WDR",
+      "weekdays": [5],
+      "time": "22:00",
+      "frequency": "Wöchentlich",
+      "color": "#B48EAD",
+      "description": "Der Freitagabend-Talk aus Köln: persönliche Geschichten, Musik und Gäste aus Kultur, Politik und Alltag."
+    },
+    {
+      "id": "ndr-talk-show",
+      "name": "NDR Talk Show",
+      "broadcaster": "NDR",
+      "weekdays": [5],
+      "time": "22:00",
+      "frequency": "Wöchentlich",
+      "color": "#4FB3BF",
+      "description": "Die große Freitagabend-Talkshow aus Hamburg mit prominenten Gästen, Musik und Gesprächen mit Tiefgang."
+    },
+    {
+      "id": "riverboat",
+      "name": "Riverboat",
+      "broadcaster": "MDR",
+      "weekdays": [5],
+      "time": "22:00",
+      "frequency": "Wöchentlich",
+      "color": "#E08A5B",
+      "description": "Der MDR-Talk aus Leipzig: Gäste aus Politik, Kultur und Sport treffen auf persönliche Geschichten und Musik."
+    },
+    {
+      "id": "3nach9",
+      "name": "3 nach 9",
+      "broadcaster": "Radio Bremen",
+      "weekdays": [5],
+      "time": "22:00",
+      "frequency": "Monatlich",
+      "color": "#D4C56A",
+      "description": "Die älteste Talkshow Deutschlands, monatlich aus Bremen – lange Gespräche, überraschende Gäste und Musik."
+    }
+  ],
+  "episodes": [
+    {
+      "showId": "maischberger",
+      "date": "2026-10-20",
+      "time": "22:50",
+      "topic": "Streit um die Bürgerversicherung",
+      "guests": [
+        "Dr. Julia Kern (Politikwissenschaftlerin)",
+        "Matthias Roth (Journalist, Berlin)",
+        "Elena Fischer (Unternehmerin)",
+        "Prof. Dr. Martin Seidel (Gesundheitsökonom)"
+      ]
+    },
+    {
+      "showId": "maischberger",
+      "date": "2026-10-21",
+      "time": "22:50",
+      "topic": "Koalition unter Druck",
+      "guests": [
+        "Clara Wenzel (Hauptstadtkorrespondentin)",
+        "Dr. Paul Neumann (Verfassungsrechtler)",
+        "Aylin Demir (Ärztin)",
+        "Tobias Reinhardt (Journalist)"
+      ]
+    },
+    {
+      "showId": "markus-lanz",
+      "date": "2026-10-22",
+      "time": "23:15",
+      "topic": "Nach dem EU-Gipfel",
+      "guests": [
+        "Dr. Anna Berger (Politologin)",
+        "Tobias Reinhardt (Journalist)",
+        "Miriam Kaya (Autorin)",
+        "Henning Krause (Politikjournalist)"
+      ]
+    },
+    {
+      "showId": "maybrit-illner",
+      "date": "2026-10-22",
+      "time": "22:15",
+      "topic": "Rente mit 70 – wer arbeitet länger?",
+      "guests": [
+        "Prof. Dr. Helene Vogt (Sozialhistorikerin)",
+        "Dr. Julia Kern (Politikwissenschaftlerin)",
+        "Michael Brandt (Wirtschaftsjournalist)"
+      ]
+    },
+    {
+      "showId": "koelner-treff",
+      "date": "2026-10-23",
+      "time": "22:00",
+      "topic": "Der Talk zum Wochenausklang",
+      "guests": [
+        "Mira Becker (Schauspielerin)",
+        "Jonas Feld (Musiker)",
+        "Prof. Dr. Helene Vogt (Historikerin)",
+        "Tarek El-Sayed (Koch)"
+      ]
+    },
+    {
+      "showId": "ndr-talk-show",
+      "date": "2026-10-23",
+      "time": "22:00",
+      "topic": "Menschen, Geschichten, Gänsehaut",
+      "guests": [
+        "Nina Paulsen (Moderatorin)",
+        "Robert Hahn (Autor)",
+        "Lea Sommer (Sängerin)",
+        "Dr. Paul Neumann (Verfassungsrechtler)"
+      ]
+    },
+    {
+      "showId": "riverboat",
+      "date": "2026-10-23",
+      "time": "22:00",
+      "topic": "Talk aus Leipzig",
+      "guests": [
+        "Katrin Wolf (Kabarettistin)",
+        "Michael Brandt (Sportreporter)",
+        "Aylin Demir (Ärztin)"
+      ]
+    },
+    {
+      "showId": "3nach9",
+      "date": "2026-10-23",
+      "time": "22:00",
+      "topic": "Die lange Talknacht aus Bremen",
+      "guests": [
+        "Clara Wenzel (Regisseurin)",
+        "Henning Krause (Politikjournalist)",
+        "Sofia Lindt (Schriftstellerin)",
+        "Jonas Feld (Musiker)"
+      ]
+    },
+    {
+      "showId": "caren-miosga",
+      "date": "2026-10-25",
+      "time": "21:45",
+      "topic": "Deutschland und die Welt",
+      "guests": [
+        "Dr. Anna Berger (Politologin)",
+        "Matthias Roth (Journalist, Berlin)",
+        "Elena Fischer (Unternehmerin)"
+      ]
+    },
+    {
+      "showId": "maischberger",
+      "date": "2026-10-27",
+      "time": "22:50",
+      "topic": "Was leistet der Sozialstaat?",
+      "guests": [
+        "Prof. Dr. Martin Seidel (Gesundheitsökonom)",
+        "Dr. Julia Kern (Politikwissenschaftlerin)",
+        "Tarek El-Sayed (Koch)"
+      ]
+    },
+    {
+      "showId": "markus-lanz",
+      "date": "2026-10-27",
+      "time": "23:15",
+      "topic": "Bundestag nach der Haushaltswoche",
+      "guests": [
+        "Henning Krause (Politikjournalist)",
+        "Dr. Paul Neumann (Verfassungsrechtler)",
+        "Nina Paulsen (Moderatorin)"
+      ]
+    },
+    {
+      "showId": "maischberger",
+      "date": "2026-10-28",
+      "time": "22:50",
+      "topic": "Streitfall Migration",
+      "guests": [
+        "Clara Wenzel (Hauptstadtkorrespondentin)",
+        "Dr. Anna Berger (Politologin)",
+        "Michael Brandt (Wirtschaftsjournalist)"
+      ]
+    },
+    {
+      "showId": "markus-lanz",
+      "date": "2026-10-28",
+      "time": "23:15",
+      "topic": "Zwischen Weltmarkt und Werkbank",
+      "guests": [
+        "Elena Fischer (Unternehmerin)",
+        "Matthias Roth (Journalist, Berlin)",
+        "Prof. Dr. Helene Vogt (Sozialhistorikerin)"
+      ]
+    },
+    {
+      "showId": "markus-lanz",
+      "date": "2026-10-29",
+      "time": "23:15",
+      "topic": "Die Woche im Rückblick",
+      "guests": [
+        "Miriam Kaya (Autorin)",
+        "Tobias Reinhardt (Journalist)",
+        "Sofia Lindt (Schriftstellerin)"
+      ]
+    },
+    {
+      "showId": "maybrit-illner",
+      "date": "2026-10-29",
+      "time": "22:15",
+      "topic": "Europa zwischen den Blöcken",
+      "guests": [
+        "Dr. Anna Berger (Politologin)",
+        "Henning Krause (Politikjournalist)",
+        "Dr. Paul Neumann (Verfassungsrechtler)"
+      ]
+    },
+    {
+      "showId": "koelner-treff",
+      "date": "2026-10-30",
+      "time": "22:00",
+      "topic": "Gäste, Geschichten, gute Laune",
+      "guests": [
+        "Lea Sommer (Sängerin)",
+        "Katrin Wolf (Kabarettistin)",
+        "Robert Hahn (Autor)"
+      ]
+    },
+    {
+      "showId": "ndr-talk-show",
+      "date": "2026-10-30",
+      "time": "22:00",
+      "topic": "Der Norden zu Gast",
+      "guests": [
+        "Nina Paulsen (Moderatorin)",
+        "Tarek El-Sayed (Koch)",
+        "Miriam Kaya (Autorin)"
+      ]
+    },
+    {
+      "showId": "riverboat",
+      "date": "2026-10-30",
+      "time": "22:00",
+      "topic": "Musik, Politik und große Gefühle",
+      "guests": [
+        "Jonas Feld (Musiker)",
+        "Clara Wenzel (Regisseurin)",
+        "Michael Brandt (Sportreporter)"
+      ]
+    },
+    {
+      "showId": "caren-miosga",
+      "date": "2026-11-01",
+      "time": "21:45",
+      "topic": "Wie viel Staat braucht das Land?",
+      "guests": [
+        "Dr. Julia Kern (Politikwissenschaftlerin)",
+        "Prof. Dr. Martin Seidel (Gesundheitsökonom)",
+        "Henning Krause (Politikjournalist)"
+      ]
+    },
+    {
+      "showId": "maischberger",
+      "date": "2026-11-03",
+      "time": "22:50",
+      "topic": "Der Streit der Woche",
+      "guests": [
+        "Dr. Anna Berger (Politologin)",
+        "Matthias Roth (Journalist, Berlin)",
+        "Nina Paulsen (Moderatorin)"
+      ]
+    },
+    {
+      "showId": "markus-lanz",
+      "date": "2026-11-03",
+      "time": "23:15",
+      "topic": "Politik und Alltag",
+      "guests": [
+        "Sofia Lindt (Schriftstellerin)",
+        "Tobias Reinhardt (Journalist)",
+        "Elena Fischer (Unternehmerin)"
+      ]
+    },
+    {
+      "showId": "maischberger",
+      "date": "2026-11-04",
+      "time": "22:50",
+      "topic": "Bildung unter Druck",
+      "guests": [
+        "Prof. Dr. Helene Vogt (Historikerin)",
+        "Aylin Demir (Ärztin)",
+        "Michael Brandt (Wirtschaftsjournalist)"
+      ]
+    },
+    {
+      "showId": "markus-lanz",
+      "date": "2026-11-04",
+      "time": "23:15",
+      "topic": "Nach der US-Wahl",
+      "guests": [
+        "Dr. Anna Berger (Politologin)",
+        "Henning Krause (Politikjournalist)",
+        "Clara Wenzel (Hauptstadtkorrespondentin)"
+      ]
+    },
+    {
+      "showId": "markus-lanz",
+      "date": "2026-11-05",
+      "time": "23:15",
+      "topic": "Der große Wochenausblick",
+      "guests": [
+        "Dr. Paul Neumann (Verfassungsrechtler)",
+        "Miriam Kaya (Autorin)",
+        "Tarek El-Sayed (Koch)"
+      ]
+    },
+    {
+      "showId": "maybrit-illner",
+      "date": "2026-11-05",
+      "time": "22:15",
+      "topic": "Zerreißt die Wohlstandsdebatte das Land?",
+      "guests": [
+        "Prof. Dr. Martin Seidel (Gesundheitsökonom)",
+        "Dr. Julia Kern (Politikwissenschaftlerin)",
+        "Matthias Roth (Journalist, Berlin)"
+      ]
+    },
+    {
+      "showId": "3nach9",
+      "date": "2026-11-20",
+      "time": "22:00",
+      "topic": "Die lange Talknacht aus Bremen",
+      "guests": [
+        "Nina Paulsen (Moderatorin)",
+        "Tobias Reinhardt (Journalist)",
+        "Sofia Lindt (Schriftstellerin)"
+      ]
+    }
+  ]
+}

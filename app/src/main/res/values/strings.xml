@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Talkshow Gäste</string>
+    <string name="app_subtitle">Wer spricht heute?</string>
+    <string name="tab_today">Heute</string>
+    <string name="tab_plan">Sendeplan</string>
+    <string name="tab_shows">Shows</string>
+    <string name="action_refresh">Aktualisieren</string>
+    <string name="action_info">Über die App</string>
+    <string name="action_add">Show hinzufügen</string>
+    <string name="guests">Gäste</string>
+    <string name="no_guests">Gäste noch nicht veröffentlicht</string>
+    <string name="no_shows_today">Heute keine Talkshow</string>
+    <string name="no_shows_today_hint">Genieß den Abend – oder wirf einen Blick in den Sendeplan.</string>
+    <string name="upcoming">Demnächst</string>
+    <string name="today_count">%1$d Sendungen heute</string>
+    <string name="today_count_one">1 Sendung heute</string>
+    <string name="last_update">Stand: %1$s Uhr</string>
+    <string name="not_updated">Noch nicht aktualisiert</string>
+    <string name="updating">Aktualisiere …</string>
+    <string name="update_success">Gäste und Sendungen aktualisiert</string>
+    <string name="update_offline">Offline – lokale Daten werden angezeigt</string>
+    <string name="database_title">Deine Shows</string>
+    <string name="database_hint">Eigene Shows ergänzen, bestehende bearbeiten oder löschen.</string>
+    <string name="manage_show">Show bearbeiten</string>
+    <string name="delete_show">Show löschen</string>
+    <string name="delete_title">Show löschen?</string>
+    <string name="delete_message">„%1$s“ wird aus deiner Datenbank entfernt. Die zugehörigen Gästelisten werden ebenfalls gelöscht.</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="save">Speichern</string>
+    <string name="delete">Löschen</string>
+    <string name="close">Schließen</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="add_show_title">Neue Show</string>
+    <string name="edit_show_title">Show bearbeiten</string>
+    <string name="name">Name</string>
+    <string name="broadcaster">Sender</string>
+    <string name="time">Uhrzeit</string>
+    <string name="weekdays">Sendetage</string>
+    <string name="frequency">Rhythmus</string>
+    <string name="description">Beschreibung</string>
+    <string name="error_name">Bitte einen Namen eingeben.</string>
+    <string name="error_time">Bitte Uhrzeit im Format 22:00 eingeben.</string>
+    <string name="error_days">Bitte mindestens einen Sendetag wählen.</string>
+    <string name="about_title">Talkshow Gäste</string>
+    <string name="about_text">Alle politischen Talkshows im deutschen Fernsehen – mit Sendezeiten und den Gästen des Tages.\n\nDie App lädt die Daten beim Start und über den Aktualisieren-Button. Shows lassen sich dauerhaft in der App ergänzen, bearbeiten und löschen.\n\nDatenquelle:\n%1$s\n\nVersion %2$s\n\nHinweis: Die mitgelieferten Gästelisten sind redaktionelle Beispieldaten. Gästeangaben ohne Gewähr – maßgeblich sind die Angaben der Sender.</string>
+</resources>
