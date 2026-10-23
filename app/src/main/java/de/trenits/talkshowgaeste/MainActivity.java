@@ -509,6 +509,9 @@ public class MainActivity extends AppCompatActivity implements Repository.Listen
         ImageButton button = findViewById(R.id.buttonRefresh);
         button.setEnabled(false);
         button.setAlpha(0.55f);
+        if (!silent) {
+            tvUpdated.setText(R.string.updating);
+        }
         startRefreshAnimation(button);
 
         repository.refresh((success, message) -> {

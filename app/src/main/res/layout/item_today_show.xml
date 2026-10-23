@@ -46,6 +46,17 @@
                     android:textSize="15sp"
                     android:text="22:00" />
 
+                <TextView
+                    android:id="@+id/tvTimeEnd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.06"
+                    android:textColor="@color/text_muted"
+                    android:textSize="13sp"
+                    android:text="– 23:30" />
+
                 <View
                     android:layout_width="1dp"
                     android:layout_height="12dp"

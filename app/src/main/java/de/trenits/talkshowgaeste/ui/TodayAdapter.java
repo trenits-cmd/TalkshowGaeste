@@ -63,11 +63,20 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         Show show = item.show;
         Episode episode = item.episode;
 
-        holder.time.setText(episode != null && !episode.time.isEmpty() ? episode.time : show.time);
+        String start = episode != null && episode.time != null && !episode.time.isEmpty() ? episode.time : (show.time == null ? "" : show.time);
+        holder.time.setText(start);
         holder.broadcaster.setText(show.broadcaster == null || show.broadcaster.isEmpty()
                 ? "TV" : show.broadcaster);
         holder.frequency.setText(show.frequency);
         holder.name.setText(show.name);
+
+        String end = addMinutes(start, 90);
+        if (end != null && !end.isEmpty()) {
+            holder.timeEnd.setVisibility(View.VISIBLE);
+            holder.timeEnd.setText("– " + end);
+        } else {
+            holder.timeEnd.setVisibility(View.GONE);
+        }
 
         if (episode != null && show.time != null
                 && episode.time != null && !episode.time.isEmpty()
@@ -112,6 +121,19 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         return items.size();
     }
 
+    private String addMinutes(String time, int minutes) {
+        if (time == null || time.isEmpty()) return null;
+        try {
+            String[] parts = time.split(":");
+            int h = Integer.parseInt(parts[0]);
+            int m = Integer.parseInt(parts[1]);
+            java.time.LocalTime t = java.time.LocalTime.of(h, m).plusMinutes(minutes);
+            return String.format(java.util.Locale.GERMAN, "%02d:%02d", t.getHour(), t.getMinute());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private int parseColor(String value) {
         try {
             return Color.parseColor(value);
@@ -124,6 +146,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         final MaterialCardView card;
         final View accentBar;
         final TextView time;
+        final TextView timeEnd;
         final TextView broadcaster;
         final TextView frequency;
         final TextView name;
@@ -137,6 +160,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             card = itemView.findViewById(R.id.card);
             accentBar = itemView.findViewById(R.id.accentBar);
             time = itemView.findViewById(R.id.tvTime);
+            timeEnd = itemView.findViewById(R.id.tvTimeEnd);
             broadcaster = itemView.findViewById(R.id.tvBroadcaster);
             frequency = itemView.findViewById(R.id.tvFrequency);
             name = itemView.findViewById(R.id.tvName);
