@@ -5,19 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="44dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
 
         <ImageView
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_logo_mark" />
 
@@ -35,7 +36,7 @@
                 android:letterSpacing="-0.01"
                 android:text="@string/app_name"
                 android:textColor="@color/text"
-                android:textSize="19sp" />
+                android:textSize="17sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -44,7 +45,7 @@
                 android:letterSpacing="0.04"
                 android:text="@string/app_subtitle"
                 android:textColor="@color/text_muted"
-                android:textSize="11sp" />
+                android:textSize="10sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,22 +55,22 @@
 
             <ImageButton
                 android:id="@+id/buttonRefresh"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="@drawable/bg_icon_ripple"
                 android:contentDescription="@string/action_refresh"
-                android:padding="8dp"
+                android:padding="6dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_refresh" />
 
             <ImageButton
                 android:id="@+id/buttonInfo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="12dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="10dp"
                 android:background="@drawable/bg_icon_ripple"
                 android:contentDescription="@string/action_info"
-                android:padding="8dp"
+                android:padding="6dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_info" />
         </LinearLayout>
