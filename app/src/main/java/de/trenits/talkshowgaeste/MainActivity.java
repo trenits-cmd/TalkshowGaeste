@@ -42,6 +42,8 @@ import de.trenits.talkshowgaeste.data.Show;
 import de.trenits.talkshowgaeste.ui.ScheduleAdapter;
 import de.trenits.talkshowgaeste.ui.ShowsAdapter;
 import de.trenits.talkshowgaeste.ui.TodayAdapter;
+import de.trenits.talkshowgaeste.ui.ArchiveAdapter;
+import de.trenits.talkshowgaeste.ui.ArchiveItem;
 import de.trenits.talkshowgaeste.util.Formats;
 
 public class MainActivity extends AppCompatActivity implements Repository.Listener {
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements Repository.Listen
     private View todayScreen;
     private View planScreen;
     private View showsScreen;
+    private View archivesScreen;
 
     private int planDayIso = LocalDate.now().getDayOfWeek().getValue();
     private boolean refreshing;
@@ -122,6 +125,9 @@ public class MainActivity extends AppCompatActivity implements Repository.Listen
         todayScreen = findViewById(R.id.todayScreen);
         planScreen = findViewById(R.id.planScreen);
         showsScreen = findViewById(R.id.showsScreen);
+        archivesScreen = findViewById(R.id.archivesScreen);
+        archiveList = findViewById(R.id.archiveList);
+        archiveEmpty = findViewById(R.id.archiveEmpty);
     }
 
     private void setupLists() {
@@ -160,6 +166,9 @@ public class MainActivity extends AppCompatActivity implements Repository.Listen
         BottomNavigationView navigation = findViewById(R.id.bottomNav);
         navigation.setOnItemSelectedListener(item -> {
             showScreen(item.getItemId());
+            if (item.getItemId() == R.id.nav_archive) {
+                showGuestArchive();
+            }
             return true;
         });
         showScreen(R.id.nav_today);
@@ -169,8 +178,10 @@ public class MainActivity extends AppCompatActivity implements Repository.Listen
         todayScreen.setVisibility(itemId == R.id.nav_today ? View.VISIBLE : View.GONE);
         planScreen.setVisibility(itemId == R.id.nav_plan ? View.VISIBLE : View.GONE);
         showsScreen.setVisibility(itemId == R.id.nav_shows ? View.VISIBLE : View.GONE);
+        archivesScreen.setVisibility(itemId == R.id.nav_archive ? View.VISIBLE : View.GONE);
         if (itemId == R.id.nav_plan) renderPlan();
         if (itemId == R.id.nav_shows) renderShows();
+        if (itemId == R.id.nav_archive) renderArchive();
     }
 
     private void setupPlanDays() {
@@ -325,6 +336,83 @@ public class MainActivity extends AppCompatActivity implements Repository.Listen
         String count = shows.size() == 1 ? "1 Show in deiner Datenbank"
                 : shows.size() + " Shows in deiner Datenbank";
         tvShowCount.setText(count + " · " + getString(R.string.database_hint));
+    }
+
+    private void renderArchive() {
+        Map<String, List<Repository.RecentArchiveEntry>> archive = repository.getRecentGuestArchive();
+
+        if (archive.isEmpty()) {
+            archiveList.setVisibility(View.GONE);
+            archiveEmpty.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        archiveList.setVisibility(View.VISIBLE);
+        archiveEmpty.setVisibility(View.GONE);
+
+        List<ArchiveItem> items = new ArrayList<>();
+        for (var showEntry : archive.entrySet()) {
+            String showName = showEntry.getKey();
+            for (var dateEntry : showEntry.getValue()) {
+                String formattedDate = dateEntry.getDate();
+                List<String> guests = dateEntry.getGuests();
+                String guestText;
+                if (guests.isEmpty()) {
+                    guestText = "keine Gäste";
+                } else if (guests.size() == 1) {
+                    guestText = guests.get(0);
+                } else {
+                    guestText = guests.get(0) + ", " + guests.get(1) + "+" + (guests.size() - 2 + " weitere");
+                }
+                items.add(new ArchiveItem(showName, formattedDate, guestText));
+            }
+        }
+
+        ArchiveAdapter adapter = new ArchiveAdapter(items);
+        archiveList.setAdapter(adapter);
+        archiveList.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_archive) {
+            showGuestArchive();
+            return true;
+        }
+        if (item.getItemId() == R.id.nav_archive) {
+            showGuestArchive();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Gästarchiv-Funktion: Zeigt Gäste der letzten 7 Tage pro Sendung
+    private void showGuestArchive() {
+        Map<String, List<Repository.RecentArchiveEntry>> archive = repository.getRecentGuestArchive();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Gästearchiv (letzte 7 Tage)\n\n");
+        if (archive.isEmpty()) {
+            sb.append("Keine Gäste-Daten der letzten 7 Tage verfügbar.");
+        } else {
+            for (var showEntry : archive.entrySet()) {
+                sb.append(showEntry.getKey()).append(":\n");
+                for (var dayEntry : showEntry.getValue()) {
+                    sb.append("  " + dayEntry.date + " - ");
+                    List<String> guests = dayEntry.guests;
+                    for (int i = 0; i < guests.size() && i < 3; i++) {
+                        sb.append(guests.get(i));
+                        if (i < 2 && i < guests.size() - 1) sb.append(", ");
+                    }
+                    if (guests.size() > 3) sb.append(" + " + (guests.size() - 3) + " weitere");
+                    sb.append("\n");
+                }
+            }
+        }
+        new AlertDialog.Builder(this)
+                .setTitle("Gästearchiv")
+                .setMessage(sb.toString())
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     private void showDetails(Show show) {

@@ -91,6 +91,8 @@
         <include layout="@layout/screen_plan" />
 
         <include layout="@layout/screen_shows" />
+
+        <include layout="@layout/screen_archive" />
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

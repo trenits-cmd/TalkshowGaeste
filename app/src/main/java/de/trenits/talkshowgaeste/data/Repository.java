@@ -56,6 +56,36 @@ public class Repository {
     private static final String KEY_LAST_UPDATE = "last_update";
     private static final String ASSET_SEED = "talkshows.json";
 
+    public static abstract class DataSource {
+        public abstract String getUrl();
+        public abstract String getName();
+    }
+
+    private static final DataSource SOURCE_GITHUB_MAIN = new DataSource() {
+        @Override public String getUrl()  { return "https://raw.githubusercontent.com/trenits-cmd/TalkshowGaeste/main/data/talkshows.json"; }
+        @Override public String getName() { return "GitHub main"; };
+    };
+
+    private static final DataSource SOURCE_GITHUB_DEV = new DataSource() {
+        @Override public String getUrl()  { return "https://raw.githubusercontent.com/trenits-cmd/TalkshowGaeste/develop/data/talkshows.json"; }
+        @Override public String getName() { return "GitHub develop"; };
+    };
+
+    private static final DataSource SOURCE_GITHUB_STAGING = new DataSource() {
+        @Override public String getUrl()  { return "https://raw.githubusercontent.com/trenits-cmd/TalkshowGaeste/staging/data/talkshows.json"; }
+        @Override public String getName() { return "GitHub staging"; };
+    };
+
+    private static final DataSource SOURCE_EXTERNAL_1 = new DataSource() {
+        @Override public String getUrl()  { return "https://api.example.com/talkshows/v1"; }
+        @Override public String getName() { return "Externe API 1"; };
+    };
+
+    private static final DataSource SOURCE_EXTERNAL_2 = new DataSource() {
+        @Override public String getUrl()  { return "https://another-tv-api.de/shows"; }
+        @Override public String getName() { return "Externe API 2"; };
+    };
+
     private static volatile Repository instance;
 
     private final Context context;
@@ -257,16 +287,29 @@ public class Repository {
 
     public void refresh(RefreshCallback callback) {
         executor.execute(() -> {
-            try {
-                String json = fetch(BuildConfig.DATA_URL);
-                mergeJson(json);
-                prefs.edit().putLong(KEY_LAST_UPDATE, System.currentTimeMillis()).apply();
+            // Quellen nacheinander probieren, bis eine funktioniert
+            DataSource[] sources = {SOURCE_GITHUB_MAIN, SOURCE_GITHUB_DEV, SOURCE_GITHUB_STAGING, SOURCE_EXTERNAL_1, SOURCE_EXTERNAL_2};
+            boolean success = false;
+            for (DataSource source : sources) {
+                try {
+                    String json = fetch(source.getUrl());
+                    if (json != null && !json.isEmpty()) {
+                        mergeJson(json);
+                        prefs.edit().putLong(KEY_LAST_UPDATE, System.currentTimeMillis()).apply();
+                        mainHandler.post(() -> {
+                            if (callback != null) callback.onFinished(true, "Aktualisiert von " + source.getName());
+                        });
+                        success = true;
+                        break;
+                    }
+                } catch (Exception e) {
+                    // Nächste Quelle probieren – stillschweigend
+                }
+            }
+            if (!success) {
+                // Alle Quellen fehlgeschlagen → lokale Daten behalten
                 mainHandler.post(() -> {
-                    if (callback != null) callback.onFinished(true, "Aktualisiert");
-                });
-            } catch (Exception exception) {
-                mainHandler.post(() -> {
-                    if (callback != null) callback.onFinished(false, exception.getMessage());
+                    if (callback != null) callback.onFinished(false, "Keine Quelle erreichbar – lokale Daten bleiben erhalten");
                 });
             }
         });
@@ -483,5 +526,77 @@ public class Repository {
             if (result != 0) return result;
             return a.name.toLowerCase(Locale.GERMAN).compareTo(b.name.toLowerCase(Locale.GERMAN));
         };
+    }
+
+    // ==== Gästearchiv der letzten 7 Tage ====
+    public static class RecentArchiveEntry {
+        public final String showName;
+        public final String date; // formatiert als "tt.MM."
+        public final List<String> guests;
+
+        public RecentArchiveEntry(String showName, String date, List<String> guests) {
+            this.showName = showName;
+            this.date = date;
+            this.guests = guests;
+        }
+    }
+
+    // Gästearchiv: Listet alle Episoden mit Gästen der letzten 7 Tage pro Show auf,
+    // getrennt nach Datum formatiert zurück.
+    public Map<String, List<RecentArchiveEntry>> getRecentGuestArchive() {
+        Map<String, List<RecentArchiveEntry>> archive = new HashMap<>();
+        SQLiteDatabase db = helper.getReadableDatabase();
+        LocalDate today = LocalDate.now();
+        LocalDate sevenDaysAgo = today.minusDays(6); // inklusive Heute bis vor 7 Tagen
+
+        // Query: Episodes der letzten 7 Tage, sortiert nach Datum und Show-Namen
+        String sql = "SELECT e.show_id, e.date, e.guests " +
+                "FROM episodes e " +
+                "JOIN shows s ON s.id = e.show_id " +
+                "WHERE s.is_deleted = 0 AND e.date >= ? " +
+                "ORDER BY e.date, s.name";
+
+        try (Cursor cursor = db.rawQuery(sql, new String[]{sevenDaysAgo.toString()})) {
+            while (cursor.moveToNext()) {
+                String showId = cursor.getString(cursor.getColumnIndexOrThrow("show_id"));
+                String dateStr = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                String guestsJson = cursor.getString(cursor.getColumnIndexOrThrow("guests"));
+
+                // Show-Namen holen
+                String showName = "";
+                try (Cursor showCursor = db.rawQuery(
+                        "SELECT name FROM shows WHERE id = ? AND is_deleted = 0", new String[]{showId})) {
+                    if (showCursor.moveToFirst()) {
+                        showName = showCursor.getString(0);
+                    }
+                }
+
+                // Datum formatieren (tt.MM.)
+                String formattedDate = "";
+                try {
+                    LocalDate epDate = LocalDate.parse(dateStr);
+                    formattedDate = epDate.format(DateTimeFormatter.ofPattern("dd.MM.", Locale.GERMAN));
+                } catch (Exception ignored) {
+                    formattedDate = dateStr;
+                }
+
+                // Gäste-List parsen
+                List<String> guestList = new ArrayList<>();
+                try {
+                    JSONArray ga = new JSONArray(guestsJson);
+                    for (int i = 0; i < ga.length(); i++) {
+                        String g = ga.optString(i, "").trim();
+                        if (!g.isEmpty()) guestList.add(g);
+                    }
+                } catch (Exception ignored) {
+                    guestList.add("Gäste nicht verfügbar");
+                }
+
+                // Eintrag dem Archiv hinzufügen
+                RecentArchiveEntry entry = new RecentArchiveEntry(showName, formattedDate, guestList);
+                archive.computeIfAbsent(showName, k -> new ArrayList<>()).add(entry);
+            }
+        }
+        return archive;
     }
 }
