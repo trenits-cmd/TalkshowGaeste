@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T10:36:26.977Z",
+  "updated": "2026-11-05T21:04:58.145Z",
   "source": "Automatisch aus offiziellen Senderangaben (ZDF, ARD/WDR, NDR, MDR, Radio Bremen)",
   "shows": [
     {
@@ -143,17 +143,6 @@
       ]
     },
     {
-      "showId": "markus-lanz",
-      "date": "2026-11-05",
-      "time": "00:00",
-      "topic": "",
-      "guests": [
-        "Elmar Theveßen (ZDF-Korrespondent)",
-        "Cathryn Clüver Ashbrook (Politologin)",
-        "Jörg Wimalasena (Autor)"
-      ]
-    },
-    {
       "showId": "maybrit-illner",
       "date": "2026-11-05",
       "time": "22:15",
@@ -164,6 +153,18 @@
         "Ben Hodges (US-General a. D.)",
         "Frank Sauer (Militärexperte)",
         "Souad Mekhennet (deutsche Journalistin in Washington und Expertin für internationale Sicherheit)"
+      ]
+    },
+    {
+      "showId": "markus-lanz",
+      "date": "2026-11-05",
+      "time": "23:15",
+      "topic": "",
+      "guests": [
+        "Roderich Kiesewetter (CDU-Politiker)",
+        "Armin Petschner-Multari (Autor)",
+        "Anna Sauerbrey (Journalistin)",
+        "Samina Sultan (Ökonomin)"
       ]
     },
     {
