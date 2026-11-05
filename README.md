@@ -2,7 +2,7 @@
 
 [![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue)](https://github.com/trenits-cmd/TalkshowGaeste/releases/tag/v1.0.0)
+[![Version](https://img.shields.io/badge/Version-1.1.0-blue)](https://github.com/trenits-cmd/TalkshowGaeste/releases/tag/v1.1.0)
 
 Eine native Android-App (Java, XML-Layouts, Material Design 3) für deutsche politische Talkshows mit Sendezeiten, Sendetagen und Gästen des Tages. Alle Daten werden lokal in SQLite gespeichert und können über eine JSON-Quelle aktualisiert werden.
 
@@ -11,8 +11,9 @@ Eine native Android-App (Java, XML-Layouts, Material Design 3) für deutsche pol
 - **Heute** – Zeigt alle Talkshows für den aktuellen Tag mit Uhrzeit, Sender, Thema und Gästen (falls veröffentlicht)
 - **Sendeplan** – Wochenübersicht mit Tag-Filter (Mo–So) und Sortierung nach Uhrzeit
 - **Shows verwalten** – Vollständige CRUD-Funktionalität: eigene Shows hinzufügen, bestehende bearbeiten oder löschen
-- **Offline-fähig** – Gebündelte Beispieldaten in `assets/talkshows.json` sorgen für einen funktionsfähigen Erststart ohne Netz
-- **Smart Merge** – Beim Remote-Update werden nur unveränderte Standard-Shows ersetzt. Eigene und lokal angepasste Shows bleiben erhalten; gelöschte Remote-Shows werden als Tombstone behandelt
+- **Echte Gäste-Daten** – Ein GitHub-Action-Job liest die Gäste- und Themenangaben zweimal täglich aus den offiziellen Senderseiten und schreibt sie in `data/talkshows.json`
+- **Offline-fähig** – Gebündelte Startdaten in `assets/talkshows.json` sorgen für einen funktionsfähigen Erststart ohne Netz
+- **Smart Merge** – Beim Remote-Update werden nur unveränderte Standard-Shows ersetzt. Eigene und lokal angepasste Shows bleiben erhalten; gelöschte Remote-Shows werden als Tombstone behandelt. Episoden folgen der Remote-Quelle, damit keine veralteten Beispieldaten stehen bleiben
 - **Deutsches UI** – Komplett auf Deutsch, dunkel/hell-kompatibles Material 3-Theme
 - **Portrait-optimiert** – Für Einhandnutzung auf Smartphones optimiert
 
@@ -48,11 +49,25 @@ adb install -r TalkshowGaeste.apk
 
 - **Remote:** `https://raw.githubusercontent.com/trenits-cmd/TalkshowGaeste/main/data/talkshows.json`
 - **Gebündelt:** `app/src/main/assets/talkshows.json`
-- **Aktualisierung:** Über den Refresh-Button in der Toolbar oder beim App-Start
-- **Merge-Logik:** 
+- **Aktualisierung in der App:** Über den Refresh-Button in der Toolbar oder beim App-Start
+- **Aktualisierung der Daten:** `.github/workflows/update-talkshows.yml` ruft `tools/update-talkshows.mjs` zweimal täglich (und manuell per „Run workflow“) auf
+- **Merge-Logik:**
   - Lokale (`is_local=1`) und angepasste (`is_customized=1`) Shows werden nie vom Remote überschrieben
   - Vom Remote gelöschte Standard-Shows werden als `is_deleted=1` markiert (erscheinen nicht mehr)
-  - Episoden/Gäste werden bei erfolgreichem Update synchronisiert
+  - Episoden/Gäste werden bei erfolgreichem Update synchronisiert; nicht mehr enthaltene Episoden werden entfernt
+
+### Woher die Gäste kommen
+
+| Show | Quelle |
+|---|---|
+| Markus Lanz, Maybrit Illner | ZDF-Presseportal („Aktuelle Gäste und Themen“) |
+| Maischberger | Das Erste / WDR |
+| Kölner Treff | WDR |
+| NDR Talk Show, Caren Miosga | NDR |
+| Riverboat | MDR |
+| 3nach9 | Radio Bremen |
+
+Die Sender veröffentlichen Gäste meist erst wenige Tage vor der Ausstrahlung. Solange eine Angabe fehlt, zeigt die App „Gäste noch nicht veröffentlicht“ – sie erfindet keine Namen mehr. Ändert ein Sender sein Seitenlayout, meldet der Action-Lauf eine Warnung und die zuletzt bekannten Daten bleiben erhalten.
 
 ### JSON-Schema
 ```json
@@ -118,7 +133,10 @@ app/src/main/
 │   ├── ui/                    # Adapter für RecyclerViews
 │   └── util/Formats.java      # Datums-/Zeit-Formatierung
 ├── res/                       # Layouts, Drawables, Values
-└── assets/talkshows.json      # Gebündelte Seed-Daten
+└── assets/talkshows.json      # Gebündelte Startdaten
+
+tools/update-talkshows.mjs     # Holt echte Gäste aus den Senderquellen
+.github/workflows/update-talkshows.yml  # Zweimal täglich automatisch
 ```
 
 ## Quick-Test auf dem Smartphone
@@ -135,7 +153,7 @@ Für einen Desktop-Shortcut kann `tools/create-desktop-shortcut.ps1` ausgeführt
 
 ## Hinweise
 
-- Die mitgelieferten Gäste-/Themenangaben sind **redaktionelle Beispieldaten** zu Demonstrationszwecken. Maßgeblich sind stets die offiziellen Angaben der jeweiligen Sender.
+- Gäste- und Themenangaben stammen aus den oben genannten offiziellen Senderquellen. Maßgeblich sind stets die Angaben der jeweiligen Sender; Änderungen kurz vor der Sendung sind möglich.
 - Die Release-APK ist mit dem Android-Debug-Schlüssel signiert und für Sideloading vorgesehen (nicht für den Google Play Store).
 - Die App speichert alle Daten lokal; es werden keine Tracking-Dienste verwendet.
 

@@ -50,6 +50,16 @@
         <item name="android:letterSpacing">-0.02</item>
     </style>
 
+    <style name="Text.Talkshow.Body1" parent="">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="Text.Talkshow.Body2" parent="">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
     <style name="Text.Talkshow.Section" parent="">
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">17sp</item>

@@ -1,0 +1,41 @@
+name: Talkshow-Gäste aktualisieren
+
+on:
+  schedule:
+    # Zweimal täglich (UTC). Sender veröffentlichen Gäste meist im Tagesverlauf.
+    - cron: "17 5,14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: talkshow-daten
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Gäste von den Sendern holen
+        run: node tools/update-talkshows.mjs
+
+      - name: Änderungen committen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/talkshows.json app/src/main/assets/talkshows.json
+          if git diff --cached --quiet; then
+            echo "Keine Änderungen."
+            exit 0
+          fi
+          git commit -m "Daten: Talkshow-Gäste aktualisiert ($(date -u +%Y-%m-%d))"
+          git push

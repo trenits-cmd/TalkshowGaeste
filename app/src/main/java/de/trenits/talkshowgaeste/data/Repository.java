@@ -19,11 +19,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -64,26 +69,6 @@ public class Repository {
     private static final DataSource SOURCE_GITHUB_MAIN = new DataSource() {
         @Override public String getUrl()  { return "https://raw.githubusercontent.com/trenits-cmd/TalkshowGaeste/main/data/talkshows.json"; }
         @Override public String getName() { return "GitHub main"; };
-    };
-
-    private static final DataSource SOURCE_GITHUB_DEV = new DataSource() {
-        @Override public String getUrl()  { return "https://raw.githubusercontent.com/trenits-cmd/TalkshowGaeste/develop/data/talkshows.json"; }
-        @Override public String getName() { return "GitHub develop"; };
-    };
-
-    private static final DataSource SOURCE_GITHUB_STAGING = new DataSource() {
-        @Override public String getUrl()  { return "https://raw.githubusercontent.com/trenits-cmd/TalkshowGaeste/staging/data/talkshows.json"; }
-        @Override public String getName() { return "GitHub staging"; };
-    };
-
-    private static final DataSource SOURCE_EXTERNAL_1 = new DataSource() {
-        @Override public String getUrl()  { return "https://api.example.com/talkshows/v1"; }
-        @Override public String getName() { return "Externe API 1"; };
-    };
-
-    private static final DataSource SOURCE_EXTERNAL_2 = new DataSource() {
-        @Override public String getUrl()  { return "https://another-tv-api.de/shows"; }
-        @Override public String getName() { return "Externe API 2"; };
     };
 
     private static volatile Repository instance;
@@ -287,8 +272,7 @@ public class Repository {
 
     public void refresh(RefreshCallback callback) {
         executor.execute(() -> {
-            // Quellen nacheinander probieren, bis eine funktioniert
-            DataSource[] sources = {SOURCE_GITHUB_MAIN, SOURCE_GITHUB_DEV, SOURCE_GITHUB_STAGING, SOURCE_EXTERNAL_1, SOURCE_EXTERNAL_2};
+            DataSource[] sources = {SOURCE_GITHUB_MAIN};
             boolean success = false;
             for (DataSource source : sources) {
                 try {
@@ -390,6 +374,9 @@ public class Repository {
             }
 
             if (episodesArray != null) {
+                // Die Remote-Quelle ist für Episoden maßgeblich. Alte Beispieldaten
+                // (oder nicht mehr veröffentlichte Termine) werden dadurch entfernt.
+                Set<String> incomingKeys = new HashSet<>();
                 for (int i = 0; i < episodesArray.length(); i++) {
                     JSONObject object = episodesArray.optJSONObject(i);
                     if (object == null) continue;
@@ -397,6 +384,8 @@ public class Repository {
                     String date = object.optString("date", "").trim();
                     if (showId.isEmpty() || date.isEmpty()) continue;
                     if (!isShowActive(db, showId)) continue;
+
+                    incomingKeys.add(episodeKey(showId, date));
 
                     ContentValues values = new ContentValues();
                     values.put("show_id", showId);
@@ -414,12 +403,30 @@ public class Repository {
                     values.put("guests", guests.toString());
                     db.insertWithOnConflict("episodes", null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
+
+                List<String[]> stale = new ArrayList<>();
+                try (Cursor cursor = db.rawQuery("SELECT show_id, date FROM episodes", null)) {
+                    while (cursor.moveToNext()) {
+                        String showId = cursor.getString(0);
+                        String date = cursor.getString(1);
+                        if (!incomingKeys.contains(episodeKey(showId, date))) {
+                            stale.add(new String[]{showId, date});
+                        }
+                    }
+                }
+                for (String[] row : stale) {
+                    db.delete("episodes", "show_id = ? AND date = ?", row);
+                }
             }
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
         notifyListeners();
+    }
+
+    private String episodeKey(String showId, String date) {
+        return showId + "\u0000" + date;
     }
 
     private boolean isShowActive(SQLiteDatabase db, String showId) {
