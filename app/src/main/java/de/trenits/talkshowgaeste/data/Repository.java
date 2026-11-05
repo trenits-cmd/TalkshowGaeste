@@ -560,10 +560,11 @@ public class Repository {
         String sql = "SELECT e.show_id, e.date, e.guests " +
                 "FROM episodes e " +
                 "JOIN shows s ON s.id = e.show_id " +
-                "WHERE s.is_deleted = 0 AND e.date >= ? " +
+                "WHERE s.is_deleted = 0 AND e.date >= ? AND e.date <= ? " +
                 "ORDER BY e.date, s.name";
 
-        try (Cursor cursor = db.rawQuery(sql, new String[]{sevenDaysAgo.toString()})) {
+        try (Cursor cursor = db.rawQuery(sql,
+                new String[]{sevenDaysAgo.toString(), today.toString()})) {
             while (cursor.moveToNext()) {
                 String showId = cursor.getString(cursor.getColumnIndexOrThrow("show_id"));
                 String dateStr = cursor.getString(cursor.getColumnIndexOrThrow("date"));
