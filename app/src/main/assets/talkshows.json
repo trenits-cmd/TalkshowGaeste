@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T02:01:40.173Z",
+  "updated": "2026-11-05T10:36:26.977Z",
   "source": "Automatisch aus offiziellen Senderangaben (ZDF, ARD/WDR, NDR, MDR, Radio Bremen)",
   "shows": [
     {
@@ -193,6 +193,20 @@
         "Susan Link",
         "Benjamin von Stuckrad-Barre",
         "Birgit Mädler"
+      ]
+    },
+    {
+      "showId": "koelner-treff",
+      "date": "2026-11-13",
+      "time": "22:30",
+      "topic": "",
+      "guests": [
+        "Christine Westermann",
+        "Götz Alsmann",
+        "Giovanni Zarrella",
+        "Johannes Schröder",
+        "Miriam Neureuther",
+        "Gamze Kubaşık"
       ]
     },
     {

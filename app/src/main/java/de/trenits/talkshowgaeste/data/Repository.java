@@ -22,7 +22,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -158,13 +157,34 @@ public class Repository {
         return result;
     }
 
-    public List<Show> showsForDay(int isoDay) {
+    public List<Show> showsForDay(int isoDay, LocalDate date) {
         List<Show> result = new ArrayList<>();
+        String dateString = date == null ? "" : date.toString();
         for (Show show : shows()) {
-            if (show.weekdays.contains(isoDay)) result.add(show);
+            boolean scheduled = show.weekdays.contains(isoDay);
+            boolean hasEpisode = !dateString.isEmpty() && episode(show.id, dateString) != null;
+            if (scheduled || hasEpisode) result.add(show);
         }
-        Collections.sort(result, showTimeComparator());
+        Collections.sort(result, (a, b) -> {
+            String left = effectiveTime(a, dateString);
+            String right = effectiveTime(b, dateString);
+            int resultCompare = left.compareTo(right);
+            if (resultCompare != 0) return resultCompare;
+            return a.name.toLowerCase(Locale.GERMAN)
+                    .compareTo(b.name.toLowerCase(Locale.GERMAN));
+        });
         return result;
+    }
+
+    /** Tatsächliche Zeit der Ausgabe, sonst die reguläre Sendezeit. */
+    public String effectiveTime(Show show, String date) {
+        if (date != null && !date.isEmpty()) {
+            Episode episode = episode(show.id, date);
+            if (episode != null && episode.time != null && !episode.time.isEmpty()) {
+                return episode.time;
+            }
+        }
+        return show.time == null ? "" : show.time;
     }
 
     public Show showById(String id) {
@@ -523,16 +543,6 @@ public class Repository {
     private int getInt(Cursor cursor, String column) {
         int index = cursor.getColumnIndex(column);
         return index >= 0 && !cursor.isNull(index) ? cursor.getInt(index) : 0;
-    }
-
-    private Comparator<Show> showTimeComparator() {
-        return (a, b) -> {
-            String left = a.time == null ? "" : a.time;
-            String right = b.time == null ? "" : b.time;
-            int result = left.compareTo(right);
-            if (result != 0) return result;
-            return a.name.toLowerCase(Locale.GERMAN).compareTo(b.name.toLowerCase(Locale.GERMAN));
-        };
     }
 
     // ==== Gästearchiv der letzten 7 Tage ====

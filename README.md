@@ -2,7 +2,7 @@
 
 [![Android](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.1.0-blue)](https://github.com/trenits-cmd/TalkshowGaeste/releases/tag/v1.1.0)
+[![Version](https://img.shields.io/badge/Version-1.2.0-blue)](https://github.com/trenits-cmd/TalkshowGaeste/releases/tag/v1.2.0)
 
 Eine native Android-App (Java, XML-Layouts, Material Design 3) für deutsche politische Talkshows mit Sendezeiten, Sendetagen und Gästen des Tages. Alle Daten werden lokal in SQLite gespeichert und können über eine JSON-Quelle aktualisiert werden.
 
@@ -68,6 +68,13 @@ adb install -r TalkshowGaeste.apk
 | 3nach9 | Radio Bremen |
 
 Die Sender veröffentlichen Gäste meist erst wenige Tage vor der Ausstrahlung. Solange eine Angabe fehlt, zeigt die App „Gäste noch nicht veröffentlicht“ – sie erfindet keine Namen mehr. Ändert ein Sender sein Seitenlayout, meldet der Action-Lauf eine Warnung und die zuletzt bekannten Daten bleiben erhalten.
+
+### Wenn sich Sendezeiten ändern
+
+- **Pro Ausgabe:** Die App übernimmt Datum und Uhrzeit aus der konkreten Episode. „Heute“, „Demnächst“, der Sendeplan und die Detailansicht zeigen deshalb auch Sondertermine und verschobene Ausgaben korrekt an.
+- **Sendeplan:** Für den gewählten Wochentag wird die tatsächliche Zeit der nächsten Ausgabe verwendet. Ein Sondertermin an einem sonst freien Tag erscheint als „Sondertermin“.
+- **Regulärer Slot:** Der Scraper zieht `shows[].time` nach, sobald sich eine neue Uhrzeit in zwei Ausgaben bestätigt. Ein neuer Wochentag wird erst übernommen, wenn drei Ausgaben darauf liegen; bei einer dauerhaften Verlegung ersetzt er den alten Slot.
+- **Einmalige Ausnahmen** ändern die Stammdaten nicht – sie werden nur als Episode angezeigt.
 
 ### JSON-Schema
 ```json

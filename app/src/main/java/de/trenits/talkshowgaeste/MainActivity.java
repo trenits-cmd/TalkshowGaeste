@@ -284,11 +284,12 @@ public class MainActivity extends AppCompatActivity implements Repository.Listen
             LocalDate date = today.plusDays(offset);
             int isoDay = date.getDayOfWeek().getValue();
             for (Show show : repository.shows()) {
-                if (!show.weekdays.contains(isoDay)) continue;
                 Episode episode = repository.episode(show.id, date.toString());
+                boolean scheduled = show.weekdays.contains(isoDay);
                 boolean monthly = show.frequency != null
                         && show.frequency.toLowerCase(Locale.GERMAN).contains("monat");
-                if (monthly && episode == null) continue;
+                // Sondertermine (Episode an einem nicht regulären Tag) immer zeigen.
+                if (episode == null && (!scheduled || monthly)) continue;
                 coming.add(new Coming(show, episode, date));
             }
         }
@@ -328,12 +329,23 @@ public class MainActivity extends AppCompatActivity implements Repository.Listen
 
     private void renderPlan() {
         String dayName = Formats.weekdayLong(planDayIso);
-        List<Show> shows = repository.showsForDay(planDayIso);
+        LocalDate planDate = nextDateForWeekday(planDayIso);
+        List<Show> shows = repository.showsForDay(planDayIso, planDate);
+        planAdapter.setDate(planDate);
         planAdapter.submit(shows);
         tvPlanDay.setText(dayName + " · " + (shows.size() == 1
                 ? "1 Show" : shows.size() + " Shows"));
         planList.setVisibility(shows.isEmpty() ? View.GONE : View.VISIBLE);
         planEmpty.setVisibility(shows.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    /** Nächstes Datum mit diesem Wochentag (heute inklusive). */
+    private LocalDate nextDateForWeekday(int isoDay) {
+        LocalDate date = LocalDate.now();
+        while (date.getDayOfWeek().getValue() != isoDay) {
+            date = date.plusDays(1);
+        }
+        return date;
     }
 
     private void renderShows() {

@@ -30,10 +30,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     private final List<Show> items = new ArrayList<>();
     private final Repository repository;
     private final OnShowClick listener;
+    private LocalDate planDate = LocalDate.now();
 
     public ScheduleAdapter(Repository repository, OnShowClick listener) {
         this.repository = repository;
         this.listener = listener;
+    }
+
+    public void setDate(LocalDate date) {
+        this.planDate = date == null ? LocalDate.now() : date;
     }
 
     public void submit(List<Show> data) {
@@ -53,10 +58,16 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Show show = items.get(position);
-        holder.time.setText(show.time);
+        Episode dayEpisode = repository.episode(show.id, planDate.toString());
+        boolean special = dayEpisode != null
+                && !show.weekdays.contains(planDate.getDayOfWeek().getValue());
+
+        String time = dayEpisode != null && dayEpisode.time != null && !dayEpisode.time.isEmpty()
+                ? dayEpisode.time : show.time;
+        holder.time.setText(time);
         holder.broadcaster.setText(show.broadcaster);
         holder.name.setText(show.name);
-        holder.frequency.setText(show.frequency);
+        holder.frequency.setText(special ? "Sondertermin" : show.frequency);
         holder.accentBar.setBackgroundColor(parseColor(show.color));
 
         Episode next = repository.nextEpisode(show.id, LocalDate.now());

@@ -607,6 +607,106 @@ function episodeKey(episode) {
   return `${episode.showId}\u0000${episode.date}`;
 }
 
+function isoWeekday(date) {
+  const [year, month, day] = date.split("-").map(Number);
+  const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+  return weekday === 0 ? 7 : weekday;
+}
+
+function mostCommon(values) {
+  const counts = new Map();
+  for (const value of values) {
+    counts.set(value, (counts.get(value) || 0) + 1);
+  }
+  let best = null;
+  let bestCount = 0;
+  for (const [value, count] of counts) {
+    if (count > bestCount) {
+      best = value;
+      bestCount = count;
+    }
+  }
+  return { value: best, count: bestCount };
+}
+
+/**
+ * Zieht den regulären Slot nach, wenn sich ein Muster in den echten
+ * Ausgaben bestätigt: mindestens zwei Ausgaben am selben Wochentag.
+ * Ein einzelner Sondertermin ändert die Stammdaten nicht.
+ */
+function updateShowMetadata(shows, episodes, todayIso) {
+  const start = addDays(todayIso, -35);
+  const end = addDays(todayIso, 60);
+
+  return shows.map((show) => {
+    const list = episodes.filter(
+      (episode) =>
+        episode.showId === show.id &&
+        episode.date >= start &&
+        episode.date <= end,
+    );
+    if (list.length < 2) return show;
+
+    const weekdayCounts = new Map();
+    for (const episode of list) {
+      const weekday = isoWeekday(episode.date);
+      weekdayCounts.set(weekday, (weekdayCounts.get(weekday) || 0) + 1);
+    }
+
+    const confirmedDays = [...weekdayCounts.entries()]
+      .filter(([, count]) => count >= 3)
+      .map(([day]) => day)
+      .sort((a, b) => a - b);
+
+    const previousWeekdays = Array.isArray(show.weekdays) ? [...show.weekdays] : [];
+    let weekdays = [...previousWeekdays];
+    if (confirmedDays.length > 0) {
+      const recentDays = list.slice(-3).map((episode) => isoWeekday(episode.date));
+      const recentOnlyNewDays =
+        recentDays.length === 3 &&
+        recentDays.every((day) => !previousWeekdays.includes(day));
+
+      if (recentOnlyNewDays) {
+        // Dauerhafte Verlegung: die letzten drei Ausgaben liegen alle auf
+        // neuen Wochentagen, die sich mindestens dreimal bestätigt haben.
+        weekdays = [...confirmedDays];
+      } else {
+        for (const day of confirmedDays) {
+          if (!weekdays.includes(day)) weekdays.push(day);
+        }
+        weekdays.sort((a, b) => a - b);
+      }
+    }
+
+    // Für die Uhrzeit nur die jüngsten Ausgaben betrachten, damit eine
+    // Änderung nicht von alten Zeiten überstimmt wird.
+    const recent = list.slice(-4);
+    const timesOnSchedule = recent
+      .filter(
+        (episode) =>
+          episode.time && weekdays.includes(isoWeekday(episode.date)),
+      )
+      .map((episode) => episode.time);
+    const commonTime = mostCommon(timesOnSchedule);
+
+    let time = show.time;
+    if (commonTime.value && commonTime.count >= 2) {
+      time = commonTime.value;
+    }
+
+    const weekdaysChanged =
+      JSON.stringify(weekdays) !== JSON.stringify(previousWeekdays);
+    const timeChanged = time !== show.time;
+    if (!weekdaysChanged && !timeChanged) return show;
+
+    log(
+      `[slot] ${show.name}: ${previousWeekdays.join(",") || "-"} ` +
+        `${show.time || "-"} -> ${weekdays.join(",") || "-"} ${time || "-"}`,
+    );
+    return { ...show, weekdays, time };
+  });
+}
+
 async function main() {
   const todayIso = todayInBerlin();
   const document = JSON.parse(readFileSync(DATA_FILE, "utf8"));
@@ -619,7 +719,7 @@ async function main() {
 
   const episodes = new Map();
   if (!previousWasDemo) {
-    const cutoff = addDays(todayIso, -21);
+    const cutoff = addDays(todayIso, -35);
     for (const episode of previousEpisodes) {
       if (!episode?.showId || !episode?.date) continue;
       if (episode.date < cutoff) continue;
@@ -674,8 +774,10 @@ async function main() {
     ),
   );
 
+  const updatedShows = updateShowMetadata(shows, sortedEpisodes, todayIso);
   const changed =
-    JSON.stringify(sortedEpisodes) !== JSON.stringify(previousEpisodes);
+    JSON.stringify(sortedEpisodes) !== JSON.stringify(previousEpisodes) ||
+    JSON.stringify(updatedShows) !== JSON.stringify(shows);
   if (!changed) {
     log("Keine Änderungen – Datei bleibt unverändert.");
     return;
@@ -684,7 +786,7 @@ async function main() {
   const updated = {
     updated: new Date().toISOString(),
     source: "Automatisch aus offiziellen Senderangaben (ZDF, ARD/WDR, NDR, MDR, Radio Bremen)",
-    shows,
+    shows: updatedShows,
     episodes: sortedEpisodes,
   };
 
