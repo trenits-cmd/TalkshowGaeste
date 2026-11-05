@@ -274,16 +274,6 @@ function inferYear(day, monthName, todayIso) {
   return candidate;
 }
 
-function findLineAfter(lines, test, offset = 1) {
-  const index = lines.findIndex(test);
-  if (index < 0) return null;
-  return lines[index + offset] ?? null;
-}
-
-function findLine(lines, test) {
-  return lines.find(test) ?? null;
-}
-
 // ---------------------------------------------------------------------------
 // ZDF: Markus Lanz
 // ---------------------------------------------------------------------------
