@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T21:04:58.145Z",
+  "updated": "2026-11-07T11:42:43.148Z",
   "source": "Automatisch aus offiziellen Senderangaben (ZDF, ARD/WDR, NDR, MDR, Radio Bremen)",
   "shows": [
     {
@@ -194,6 +194,22 @@
         "Susan Link",
         "Benjamin von Stuckrad-Barre",
         "Birgit Mädler"
+      ]
+    },
+    {
+      "showId": "riverboat",
+      "date": "2026-11-13",
+      "time": "22:00",
+      "topic": "",
+      "guests": [
+        "Matthias Reim",
+        "Reinhold",
+        "Diane Messner",
+        "Thomas Junker",
+        "Ekaterina Leonova",
+        "Britta Steffen",
+        "Ralf Dümmel",
+        "Lang Lang"
       ]
     },
     {
